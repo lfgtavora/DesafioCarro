@@ -1,6 +1,8 @@
 package com.example.desafiocarro.models;
 
-public class Car {
+import java.io.Serializable;
+
+public class Car implements Serializable {
 
     private int id;
     private String nome;
@@ -10,6 +12,15 @@ public class Car {
     private float preco;
     private String imagem;
 
+    public Car(int id, String nome, String descricao, String marca, int quantidade, float preco, String imagem) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.marca = marca;
+        this.quantidade = quantidade;
+        this.preco = preco;
+        this.imagem = imagem;
+    }
 
     public int getId() {
         return id;
@@ -66,4 +77,5 @@ public class Car {
     public void setImagem(String imagem) {
         this.imagem = imagem;
     }
+
 }

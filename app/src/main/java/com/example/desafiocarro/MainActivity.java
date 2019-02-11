@@ -53,16 +53,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        mTextMessage = findViewById(R.id.message);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        setupFragment();
     }
 
     public void setupFragment(){
         listCarsFragments = new ListCarsFragments();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_list_cars, listCarsFragments );
-        transaction.commit();
+        transaction.replace(R.id.fraame_container, listCarsFragments );
+        transaction.commitAllowingStateLoss();
     }
 
 }

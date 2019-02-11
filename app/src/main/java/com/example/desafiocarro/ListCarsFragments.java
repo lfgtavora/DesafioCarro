@@ -33,7 +33,6 @@ public class ListCarsFragments extends Fragment {
     private TextView mTextMessage;
     private List<Car> carList;
     private LinearLayoutManager layoutManager ;
-    Retrofit retrofit;
 
     public ListCarsFragments() {
         // Required empty public constructor
@@ -47,6 +46,20 @@ public class ListCarsFragments extends Fragment {
 
         carList = new ArrayList<>();
 
+        callListCar();
+
+
+        RecyclerView rv_carList = view.findViewById(R.id.carlistID);
+        layoutManager = new LinearLayoutManager(getActivity());
+        rv_carList.setLayoutManager(layoutManager);
+        carlistAdapter = new CarlistAdapter(carList, getContext());
+        rv_carList.setAdapter(carlistAdapter);
+
+        return view;
+
+    }
+
+    public void callListCar() {
         CarlistService api = RetrofitConfig.getRetrofitConfig().create(CarlistService.class);
 
         api.getCars().enqueue(new Callback<List<Car>>() {
@@ -66,15 +79,5 @@ public class ListCarsFragments extends Fragment {
 
             }
         });
-
-        RecyclerView rv_carList = view.findViewById(R.id.carlistID);
-        layoutManager = new LinearLayoutManager(getActivity());
-        rv_carList.setLayoutManager(layoutManager);
-        carlistAdapter = new CarlistAdapter(carList);
-        rv_carList.setAdapter(carlistAdapter);
-
-        return view;
-
     }
-
 }

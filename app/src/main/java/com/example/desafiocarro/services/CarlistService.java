@@ -8,7 +8,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface CarlistService {
-
     String BASE_URL = "http://desafiobrq.herokuapp.com/";
 
     @GET("v1/carro/")
