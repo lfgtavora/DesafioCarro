@@ -1,5 +1,6 @@
 package com.example.desafiocarro;
 
+import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,6 +10,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.desafiocarro.database.AppDatabase;
+import com.example.desafiocarro.database.CarDAO;
 import com.example.desafiocarro.models.Car;
 import com.squareup.picasso.Picasso;
 
@@ -20,6 +23,7 @@ import java.text.NumberFormat;
 public class CarDetails extends AppCompatActivity {
 
     private Car carro =  null;
+    private AppDatabase db;
     private TextView btnAddToCart;
 
 
@@ -45,6 +49,10 @@ public class CarDetails extends AppCompatActivity {
         totalPrice = findViewById(R.id.TotalPriceID);
         btnAddToCart = findViewById(R.id.BtnAddToCart);
 
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-car").allowMainThreadQueries().build();
+
+
         if (getIntent().getExtras() != null) {
             carro = (Car) getIntent().getExtras().get("CARRO_OBJ");
             marca.setText(carro.getMarca());
@@ -55,6 +63,9 @@ public class CarDetails extends AppCompatActivity {
             setTitle(carro.getNome());
 
 
+            //insere obj carro no BD
+            db.carDAO().insert(carro);
+
         } else {
             Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show();
         }
@@ -62,7 +73,7 @@ public class CarDetails extends AppCompatActivity {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                carro.setQuantidade(5);
+                Toast.makeText(CarDetails.this, db.carDAO().getCarByID(1).getNome(), Toast.LENGTH_SHORT).show();
             }
         });
 

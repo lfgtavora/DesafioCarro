@@ -1,17 +1,35 @@
 package com.example.desafiocarro.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.io.Serializable;
 
+
+@Entity(tableName ="cars")
 public class Car implements Serializable {
 
-
-
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private int id;
+
+    @ColumnInfo(name = "nome")
     private String nome;
+
+    @ColumnInfo(name = "descricao")
     private String descricao;
+
+    @ColumnInfo(name = "marca")
     private String marca;
+
+    @ColumnInfo(name = "quantidade")
     private int quantidade;
+
+    @ColumnInfo(name = "preco")
     private float preco;
+
+    @ColumnInfo(name = "imagem")
     private String imagem;
 
     public Car(int id, String nome, String descricao, String marca, int quantidade, float preco, String imagem) {
