@@ -53,12 +53,20 @@
             android:textSize="14sp"
             tools:text='"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.' />
 
-        <SeekBar
-            android:id="@+id/seekBar4"
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:max="25"
+            android:layout_marginTop="10dp"
+            android:text="Adicionar ao carrinho"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/seekBarID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
             android:thumb="@drawable/ic_shopping_basket_black_24dp" />
 
         <TextView
@@ -66,7 +74,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Quantidade disponivel: 25" />
+            tools:text="0 items" />
+
+        <TextView
+            android:id="@+id/TotalLabelID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="TOTAL"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TotalPriceID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0,00"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/BtnAddToCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Add to cart"
+            android:textColor="@android:color/white"
+            android:visibility="invisible" />
+
     </LinearLayout>
 
 </FrameLayout>

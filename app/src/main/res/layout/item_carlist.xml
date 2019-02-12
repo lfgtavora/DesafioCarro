@@ -20,7 +20,6 @@
             android:cropToPadding="false"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/NomeID"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic[1]" />
@@ -34,8 +33,8 @@
             android:textColor="@android:color/background_dark"
             android:textStyle="bold"
             android:visibility="visible"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="108dp" />
+            app:layout_constraintStart_toStartOf="@+id/descricaoID"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/descricaoID"
