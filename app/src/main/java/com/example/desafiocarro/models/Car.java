@@ -32,15 +32,6 @@ public class Car implements Serializable {
     @ColumnInfo(name = "imagem")
     private String imagem;
 
-    public Car(int id, String nome, String descricao, String marca, int quantidade, float preco, String imagem) {
-        this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.marca = marca;
-        this.quantidade = quantidade;
-        this.preco = preco;
-        this.imagem = imagem;
-    }
 
     public int getId() {
         return id;

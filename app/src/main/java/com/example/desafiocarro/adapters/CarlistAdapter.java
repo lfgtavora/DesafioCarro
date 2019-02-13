@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.desafiocarro.CarDetails;
 import com.example.desafiocarro.R;
+import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -24,10 +25,12 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
 
     private List<Car> carlist;
     private Context context;
+    private AppDatabase db;
 
-    public CarlistAdapter(List<Car> cars, Context context) {
+    public CarlistAdapter(AppDatabase db, List<Car> cars, Context context) {
         this.carlist = cars;
         this.context = context;
+        this.db = db;
     }
 
     @NonNull
@@ -59,7 +62,8 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
                         int id = carro.getId();
                         if(carlist.get(position).getId() == id){
                             carlist.remove(position);
-                            notifyItemRemoved(position);
+                            db.carDAO().deleteByCarId(id);
+                            notifyDataSetChanged();
                         }
                     }
                 });
@@ -68,19 +72,8 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CarDetails.class);
-                intent.putExtra("CARRO_OBJ", carro);
+                intent.putExtra("CARRO_ID", carro.getId());
                 context.startActivity(intent);
-
-
-//                //pass Bundle to fragment
-//                CarPage carPageFragment =  new CarPage();
-//                carPageFragment.setArguments(bundle);
-//                //start new fragment
-//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-//                activity.getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fraame_container, carPageFragment)
-//                        .commitAllowingStateLoss();
             }
         });
     }

@@ -25,7 +25,7 @@ public class CarDetails extends AppCompatActivity {
     private Car carro =  null;
     private AppDatabase db;
     private TextView btnAddToCart;
-
+    private int quantidade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +37,14 @@ public class CarDetails extends AppCompatActivity {
         TextView marca;
         TextView descricao;
         ImageView imagem;
-        final TextView quantidade;
-        SeekBar seekbar;
+        final TextView quantidadetxt;
+        final SeekBar seekbar;
         final TextView totalPrice;
 
         marca = findViewById(R.id.MarcaID);
         descricao = findViewById(R.id.DescricaoID);
         imagem = findViewById(R.id.ImagemID);
-        quantidade = findViewById(R.id.QuantidadeID);
+        quantidadetxt = findViewById(R.id.QuantidadeID);
         seekbar = findViewById(R.id.seekBarID);
         totalPrice = findViewById(R.id.TotalPriceID);
         btnAddToCart = findViewById(R.id.BtnAddToCart);
@@ -54,17 +54,14 @@ public class CarDetails extends AppCompatActivity {
 
 
         if (getIntent().getExtras() != null) {
-            carro = (Car) getIntent().getExtras().get("CARRO_OBJ");
+            int id = (int) getIntent().getExtras().get("CARRO_ID");
+            carro = db.carDAO().getCarByID(id);
             marca.setText(carro.getMarca());
             descricao.setText(carro.getDescricao());
             Picasso.get().load(carro.getImagem()).into(imagem);
-            quantidade.setText("0 items");
+            quantidadetxt.setText("0 items");
             seekbar.setMax(carro.getQuantidade());
             setTitle(carro.getNome());
-
-
-            //insere obj carro no BD
-            db.carDAO().insert(carro);
 
         } else {
             Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show();
@@ -73,14 +70,19 @@ public class CarDetails extends AppCompatActivity {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(CarDetails.this, db.carDAO().getCarByID(1).getNome(), Toast.LENGTH_SHORT).show();
+                carro = db.carDAO().getCarByID(carro.getId());
+                int itensRestantes = carro.getQuantidade() - quantidade;
+                db.carDAO().setQuantidade(carro.getId(), itensRestantes);
+                seekbar.setMax(itensRestantes);
+                seekbar.setProgress(0);
             }
         });
 
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                quantidade.setText(String.format("%d items", seekBar.getProgress()));
+                quantidade = seekBar.getProgress();
+                quantidadetxt.setText(String.format("%d items de %d", quantidade, seekBar.getMax()));
                 totalPrice.setText(calculateTotalPrice(carro.getPreco(), seekBar.getProgress()));
                 minItemCartValid(seekBar.getProgress());
             }

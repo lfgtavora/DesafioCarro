@@ -5,6 +5,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.example.desafiocarro.models.Car;
 
@@ -21,7 +22,12 @@ public interface CarDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Car car);
 
-    @Delete
-    void delete(Car car);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAllCars(List<Car> carList);
 
+    @Query("DELETE FROM cars WHERE id = :id")
+    void deleteByCarId(int id);
+
+    @Query("UPDATE cars SET quantidade= :quantidade WHERE id = :id")
+    void setQuantidade(int id, int quantidade);
 }
