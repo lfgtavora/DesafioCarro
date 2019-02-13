@@ -11,12 +11,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.desafiocarro.adapters.CarlistAdapter;
+import com.example.desafiocarro.fragments.ListCarsFragments;
+import com.example.desafiocarro.fragments.MyCart;
 import com.example.desafiocarro.models.Car;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     /*Fragments*/
     private ListCarsFragments listCarsFragments;
+    private MyCart myCart;
+
 
 
     /*bind views*/
@@ -38,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    setupFragment();
+                    setupFragmentCar();
                     return true;
                 case R.id.navigation_cart:
-                    mTextMessage.setText(R.string.title_cart);
+                    setupFragmentCartList();
                     return true;
             }
             return false;
@@ -52,18 +53,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupFragmentCar();
 
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        setupFragment();
     }
 
-    public void setupFragment(){
+    public void setupFragmentCar(){
         listCarsFragments = new ListCarsFragments();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fraame_container, listCarsFragments );
         transaction.commitAllowingStateLoss();
     }
+
+    public void setupFragmentCartList(){
+        myCart = new MyCart();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fraame_container, myCart );
+        transaction.commitAllowingStateLoss();
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.example.desafiocarro;
 
 import android.arch.persistence.room.Room;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ public class CarDetails extends AppCompatActivity {
     private AppDatabase db;
     private TextView btnAddToCart;
     private int quantidade;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class CarDetails extends AppCompatActivity {
                 carro = db.carDAO().getCarByID(carro.getId());
                 int itensRestantes = carro.getQuantidade() - quantidade;
                 db.carDAO().setQuantidade(carro.getId(), itensRestantes);
+                Toast.makeText(CarDetails.this, String.format("%d items adicionados ao carrnho", quantidade), Toast.LENGTH_SHORT).show();
                 seekbar.setMax(itensRestantes);
                 seekbar.setProgress(0);
             }

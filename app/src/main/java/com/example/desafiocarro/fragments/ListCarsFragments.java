@@ -1,4 +1,4 @@
-package com.example.desafiocarro;
+package com.example.desafiocarro.fragments;
 
 
 import android.arch.persistence.room.Room;
@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.desafiocarro.R;
+import com.example.desafiocarro.RetrofitConfig;
 import com.example.desafiocarro.adapters.CarlistAdapter;
 import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
@@ -36,6 +40,7 @@ public class ListCarsFragments extends Fragment {
     private List<Car> carList;
     private LinearLayoutManager layoutManager ;
     private AppDatabase db;
+    private ItemTouchHelper itemTouchHelper;
 
     public ListCarsFragments() {
         // Required empty public constructor
@@ -59,6 +64,9 @@ public class ListCarsFragments extends Fragment {
         rv_carList.setLayoutManager(layoutManager);
         carlistAdapter = new CarlistAdapter(db,db.carDAO().getAll(), getContext());
         rv_carList.setAdapter(carlistAdapter);
+
+        itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rv_carList);
 
         return view;
 
@@ -91,4 +99,21 @@ public class ListCarsFragments extends Fragment {
         Log.i("DB", String.valueOf(dbsize));
         return dbsize == 0;
     }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            Toast.makeText(getActivity(), "on Move", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            Toast.makeText(getActivity(), "on Swiped ", Toast.LENGTH_SHORT).show();
+            //Remove swiped item from list and notify the RecyclerView
+            final int position = viewHolder.getAdapterPosition();
+            carlistAdapter.notifyItemRemoved(position);
+        }
+    };
 }
