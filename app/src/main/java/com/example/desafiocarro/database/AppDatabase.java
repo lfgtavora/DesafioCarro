@@ -8,5 +8,6 @@ import com.example.desafiocarro.models.Car;
 @Database(entities = {Car.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase  {
         public abstract CarDAO carDAO();
+        public abstract ShopcartDAO ShopcartDAO();
 }
 

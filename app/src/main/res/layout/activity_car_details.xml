@@ -66,8 +66,7 @@
             android:id="@+id/seekBarID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:thumb="@drawable/ic_shopping_basket_black_24dp" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/QuantidadeID"
@@ -92,6 +91,16 @@
             android:layout_height="wrap_content"
             android:text="$0,00"
             android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/WarningQtdTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:autoText="false"
+            android:drawableLeft="@drawable/ic_error_black_24dp"
+            android:text="Você nao pode gastar mais de R$100.000,00"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/BtnAddToCart"

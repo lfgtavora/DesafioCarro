@@ -1,9 +1,12 @@
 package com.example.desafiocarro;
 
 import android.arch.persistence.room.Room;
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +30,9 @@ public class CarDetails extends AppCompatActivity {
     private AppDatabase db;
     private TextView btnAddToCart;
     private int quantidade;
+    private float totalPrice;
     private Snackbar snackbar;
+    private TextView warningQtdTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +46,15 @@ public class CarDetails extends AppCompatActivity {
         ImageView imagem;
         final TextView quantidadetxt;
         final SeekBar seekbar;
-        final TextView totalPrice;
+        final TextView totalPriceTxt;
 
         marca = findViewById(R.id.MarcaID);
         descricao = findViewById(R.id.DescricaoID);
         imagem = findViewById(R.id.ImagemID);
         quantidadetxt = findViewById(R.id.QuantidadeID);
         seekbar = findViewById(R.id.seekBarID);
-        totalPrice = findViewById(R.id.TotalPriceID);
+        totalPriceTxt = findViewById(R.id.TotalPriceID);
+        warningQtdTxt = findViewById(R.id.WarningQtdTxt);
         btnAddToCart = findViewById(R.id.BtnAddToCart);
 
         db = Room.databaseBuilder(getApplicationContext(),
@@ -78,6 +84,8 @@ public class CarDetails extends AppCompatActivity {
                 Toast.makeText(CarDetails.this, String.format("%d items adicionados ao carrnho", quantidade), Toast.LENGTH_SHORT).show();
                 seekbar.setMax(itensRestantes);
                 seekbar.setProgress(0);
+
+                setAlertDialog();
             }
         });
 
@@ -85,9 +93,10 @@ public class CarDetails extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 quantidade = seekBar.getProgress();
+                totalPrice = quantidade * carro.getPreco();
                 quantidadetxt.setText(String.format("%d items de %d", quantidade, seekBar.getMax()));
-                totalPrice.setText(calculateTotalPrice(carro.getPreco(), seekBar.getProgress()));
-                minItemCartValid(seekBar.getProgress());
+                totalPriceTxt.setText(transformCurrency(totalPrice));
+                minItemCartValid(seekBar.getProgress(), totalPrice);
             }
 
             @Override
@@ -128,12 +137,34 @@ public class CarDetails extends AppCompatActivity {
         return currency;
     }
 
-    private void minItemCartValid(int numberItems){
+    private void minItemCartValid(int numberItems, float totalPrice){
         if (numberItems > 0) {
             btnAddToCart.setVisibility(View.VISIBLE);
+            if (totalPrice > 100000.0){
+                warningQtdTxt.setVisibility(View.VISIBLE);
+                btnAddToCart.setVisibility(View.INVISIBLE);
+            }
+            else
+                warningQtdTxt.setVisibility(View.GONE);
         } else {
             btnAddToCart.setVisibility(View.INVISIBLE);
         }
     }
+
+    public void setAlertDialog(){
+        AlertDialog.Builder alertadd = new AlertDialog.Builder(this);
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View view = factory.inflate(R.layout.alert_dialog_add_to_cart, null);
+        alertadd.setTitle("Deseja ir para o carrinho?");
+        alertadd.setView(view);
+        alertadd.setNeutralButton("Here!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dlg, int sumthin) {
+
+            }
+        });
+
+        alertadd.show();
+    }
+
 
 }
