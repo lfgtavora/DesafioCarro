@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageID"
+            android:id="@+id/imageCartItemID"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:adjustViewBounds="false"
@@ -25,7 +25,7 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic[1]" />
 
         <TextView
-            android:id="@+id/NomeID"
+            android:id="@+id/NomeIDTxt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -53,8 +53,8 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageID"
-            app:layout_constraintTop_toBottomOf="@+id/NomeID"
+            app:layout_constraintStart_toEndOf="@+id/imageCartItemID"
+            app:layout_constraintTop_toBottomOf="@+id/NomeIDTxt"
             tools:text="O Nissan GT-R é um modelo de automóvel superesportivo produzido pela Nissan, foi anunciado em 2001 com o objetivo de reviver a marca GT-R" />
 
         <TextView

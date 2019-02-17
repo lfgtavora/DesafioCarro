@@ -17,12 +17,14 @@ import android.widget.Toast;
 import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.database.CarDAO;
 import com.example.desafiocarro.models.Car;
+import com.example.desafiocarro.models.ItemCart;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.List;
 
 public class CarDetails extends AppCompatActivity {
 
@@ -82,6 +84,9 @@ public class CarDetails extends AppCompatActivity {
                 int itensRestantes = carro.getQuantidade() - quantidade;
                 db.carDAO().setQuantidade(carro.getId(), itensRestantes);
                 Toast.makeText(CarDetails.this, String.format("%d items adicionados ao carrnho", quantidade), Toast.LENGTH_SHORT).show();
+
+                insertItemOnCart(carro, quantidade);
+
                 seekbar.setMax(itensRestantes);
                 seekbar.setProgress(0);
 
@@ -164,6 +169,24 @@ public class CarDetails extends AppCompatActivity {
         });
 
         alertadd.show();
+    }
+
+    public void insertItemOnCart(Car carro, int quantidade){
+        List<ItemCart> itemCarts = db.itemCartDAO().getItemsCart();
+        int position = -1;
+        for(int i =0; i < itemCarts.size();i++){
+            if(itemCarts.get(i).getIdCar() == carro.getId()){
+                position = i;
+            }
+        }
+        if(position == -1){
+            ItemCart itemCart = new ItemCart(carro.getId(), quantidade, carro.getPreco());
+            db.itemCartDAO().insertItemOnCart(itemCart);
+        } else{
+            int quantidade2 = itemCarts.get(position).getQuantidade() + quantidade;
+            int idCar = itemCarts.get(position).getIdCar();
+            db.itemCartDAO().updateQuantidade(quantidade2, idCar);
+        }
     }
 
 

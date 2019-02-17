@@ -14,7 +14,6 @@ import com.example.desafiocarro.CarDetails;
 import com.example.desafiocarro.R;
 import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -91,10 +90,10 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
 
         private ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.nome = itemView.findViewById(R.id.NomeID);
+            this.nome = itemView.findViewById(R.id.NomeIDTxt);
             this.preco = itemView.findViewById(R.id.precoID);
             this.descricao = itemView.findViewById(R.id.descricaoID);
-            this.image = itemView.findViewById(R.id.imageID);
+            this.image = itemView.findViewById(R.id.imageCartItemID);
         }
     }
 }
