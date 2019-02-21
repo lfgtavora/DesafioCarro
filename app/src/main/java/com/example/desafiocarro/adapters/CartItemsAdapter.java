@@ -1,5 +1,6 @@
 package com.example.desafiocarro.adapters;
 
+import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.desafiocarro.DelegateItemCart;
 import com.example.desafiocarro.R;
 import com.example.desafiocarro.database.AppDatabase;
+import com.example.desafiocarro.fragments.MyCart;
 import com.example.desafiocarro.models.Car;
 import com.example.desafiocarro.models.ItemCart;
 import com.squareup.picasso.Picasso;
@@ -21,14 +24,13 @@ import java.util.List;
 public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.MyViewHolder> {
 
     private List<ItemCart> itemsList;
-    private Context context;
+    private MyCart context;
     private AppDatabase db;
 
-
-    public CartItemsAdapter(List<ItemCart> itemsList, Context context, AppDatabase db) {
+    public CartItemsAdapter(List<ItemCart> itemsList, MyCart context, AppDatabase db) {
         this.itemsList = itemsList;
-        this.context = context;
         this.db = db;
+        this.context = context;
     }
 
     @NonNull
@@ -39,13 +41,37 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
-        ItemCart item = itemsList.get(position);
-        int idCar = item.getIdCar();
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int position) {
+        final ItemCart item = itemsList.get(position);
+        final int idCar = item.getIdCar();
+        final Car carro = db.carDAO().getCarByID(idCar);
 
-        Car carro = db.carDAO().getCarByID(idCar);
+        bindItems(myViewHolder, item, carro);
+        removerItemLista(myViewHolder, position, item, carro);
+    }
 
-        //bind
+    private void removerItemLista(@NonNull MyViewHolder myViewHolder, final int position, final ItemCart item, final Car carro) {
+        myViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //remove item do DB e da lista
+                db.itemCartDAO().deleta(item);
+                itemsList.remove(position);
+                notifyItemRemoved(position);
+                notifyDataSetChanged();
+
+                //acrescenta qtd
+                carro.setQuantidade(item.getQuantidade() + carro.getQuantidade());
+                db.carDAO().setQtd(carro);
+
+                context.setTotal();
+
+                return true;
+            }
+        });
+    }
+
+    private void bindItems(@NonNull MyViewHolder myViewHolder, ItemCart item, Car carro) {
         myViewHolder.nomeCarro.setText(carro.getNome());
         Picasso.get().load(carro.getImagem()).into(myViewHolder.imageCar);
         myViewHolder.quantidade.setText(String.format("Qtd: %d", item.getQuantidade()));

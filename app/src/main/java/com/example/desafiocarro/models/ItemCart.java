@@ -11,13 +11,10 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class ItemCart {
 
     @PrimaryKey
-    @ColumnInfo(name = "idCar")
     private int idCar;
 
-    @ColumnInfo(name = "quantidade")
     private int quantidade;
 
-    @ColumnInfo(name = "preco")
     private float preco;
 
     public ItemCart(int idCar, int quantidade, float preco) {

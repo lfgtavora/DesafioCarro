@@ -30,4 +30,7 @@ public interface CarDAO {
 
     @Query("UPDATE cars SET quantidade= :quantidade WHERE id = :id")
     void setQuantidade(int id, int quantidade);
+
+    @Update
+    void setQtd(Car carro);
 }
