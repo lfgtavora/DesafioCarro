@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.desafiocarro.CarDetailsActivity;
+import com.example.desafiocarro.CarDetailsFragment;
+import com.example.desafiocarro.MainActivity;
+import com.example.desafiocarro.MainDelegate;
 import com.example.desafiocarro.R;
 import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
@@ -46,6 +50,9 @@ public class ListCarsFragment extends Fragment implements ListCarsContract.view 
         setupList(view);
         carList = new ArrayList<>();
 
+        MainDelegate mainDelegate = (MainDelegate) getActivity();
+        mainDelegate.shouldDisplayHomeUp(false);
+
         return view;
     }
 
@@ -59,18 +66,11 @@ public class ListCarsFragment extends Fragment implements ListCarsContract.view 
         rv_carList.setAdapter(listCarsAdapter);
     }
 
-//    @Override
-//    public void startDetailsCarsActivity(Car carro) {
-//        Intent intent = new Intent(getContext(), CarDetailsActivity.class);
-//        intent.putExtra("CARRO_OBJ", carro);
-//        startActivity(intent);
-//    }
-
     @Override
     public void startDetailsCarsActivity(Car carro) {
-        FragmentManager fragmentManager = new FragmentManager() {
-        }
+        Intent intent = new Intent(getContext(), CarDetailsActivity.class);
+        intent.putExtra("CARRO_OBJ", carro);
+        startActivity(intent);
     }
-
 
 }
