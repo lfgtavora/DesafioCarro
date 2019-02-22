@@ -2,11 +2,12 @@ package com.example.desafiocarro;
 
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,25 +16,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.desafiocarro.database.AppDatabase;
-import com.example.desafiocarro.database.CarDAO;
 import com.example.desafiocarro.models.Car;
 import com.example.desafiocarro.models.ItemCart;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.List;
 
-public class CarDetails extends AppCompatActivity {
+public class CarDetailsActivity extends AppCompatActivity {
 
     private Car carro =  null;
     private AppDatabase db;
     private TextView btnAddToCart;
     private int quantidade;
     private float totalPrice;
-    private Snackbar snackbar;
     private TextView warningQtdTxt;
 
     @Override
@@ -64,15 +60,13 @@ public class CarDetails extends AppCompatActivity {
 
 
         if (getIntent().getExtras() != null) {
-            int id = (int) getIntent().getExtras().get("CARRO_ID");
-            carro = db.carDAO().getCarByID(id);
+            carro = (Car) getIntent().getExtras().get("CARRO_OBJ");
             marca.setText(carro.getMarca());
             descricao.setText(carro.getDescricao());
             Picasso.get().load(carro.getImagem()).into(imagem);
             quantidadetxt.setText("0 items");
             seekbar.setMax(carro.getQuantidade());
             setTitle(carro.getNome());
-
         } else {
             Toast.makeText(this, "erro", Toast.LENGTH_SHORT).show();
         }
@@ -80,10 +74,9 @@ public class CarDetails extends AppCompatActivity {
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                carro = db.carDAO().getCarByID(carro.getId());
                 int itensRestantes = carro.getQuantidade() - quantidade;
                 db.carDAO().setQuantidade(carro.getId(), itensRestantes);
-                Toast.makeText(CarDetails.this, String.format("%d items adicionados ao carrnho", quantidade), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CarDetailsActivity.this, String.format("%d items adicionados ao carrinho", quantidade), Toast.LENGTH_SHORT).show();
 
                 insertItemOnCart(carro, quantidade);
 
@@ -94,6 +87,11 @@ public class CarDetails extends AppCompatActivity {
             }
         });
 
+        lidaComSeekBar(quantidadetxt, seekbar, totalPriceTxt);
+
+    }
+
+    private void lidaComSeekBar(final TextView quantidadetxt, SeekBar seekbar, final TextView totalPriceTxt) {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -114,7 +112,6 @@ public class CarDetails extends AppCompatActivity {
 
             }
         });
-
     }
 
     @Override
@@ -158,16 +155,19 @@ public class CarDetails extends AppCompatActivity {
 
     public void setAlertDialog(){
         AlertDialog.Builder alertadd = new AlertDialog.Builder(this);
-        LayoutInflater factory = LayoutInflater.from(this);
-        final View view = factory.inflate(R.layout.alert_dialog_add_to_cart, null);
         alertadd.setTitle("Deseja ir para o carrinho?");
-        alertadd.setView(view);
-        alertadd.setNeutralButton("Here!", new DialogInterface.OnClickListener() {
+        alertadd.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dlg, int sumthin) {
-
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("GOTOCART", true );
+                startActivity(intent);
             }
         });
-
+        alertadd.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dlg, int sumthin) {
+                //DO NOTHING
+            }
+        });
         alertadd.show();
     }
 

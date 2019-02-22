@@ -20,17 +20,14 @@ public interface CarDAO {
     Car getCarByID(int id);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Car car);
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAllCars(List<Car> carList);
-
-    @Query("DELETE FROM cars WHERE id = :id")
-    void deleteByCarId(int id);
 
     @Query("UPDATE cars SET quantidade= :quantidade WHERE id = :id")
     void setQuantidade(int id, int quantidade);
 
     @Update
     void setQtd(Car carro);
+
+    @Delete
+    void delete(Car carro);
 }

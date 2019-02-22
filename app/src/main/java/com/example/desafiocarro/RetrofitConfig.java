@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitConfig {
 
-
     public static Retrofit getRetrofitConfig(){
         return new Retrofit.Builder()
                 .baseUrl(CarlistService.BASE_URL)

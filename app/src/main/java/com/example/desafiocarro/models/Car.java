@@ -11,7 +11,6 @@ import java.io.Serializable;
 public class Car implements Serializable {
 
     @PrimaryKey
-    @ColumnInfo(name = "id")
     private int id;
 
     @ColumnInfo(name = "nome")

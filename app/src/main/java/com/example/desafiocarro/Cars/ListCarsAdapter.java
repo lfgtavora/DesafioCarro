@@ -1,5 +1,6 @@
-package com.example.desafiocarro.adapters;
+package com.example.desafiocarro.Cars;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.desafiocarro.CarDetails;
+import com.example.desafiocarro.CarDetailsActivity;
 import com.example.desafiocarro.R;
 import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
@@ -20,16 +21,17 @@ import java.text.NumberFormat;
 import java.util.List;
 
 
-public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHolder> {
+public class ListCarsAdapter extends RecyclerView.Adapter<ListCarsAdapter.ViewHolder> {
 
     private List<Car> carlist;
     private Context context;
-    private AppDatabase db;
+    private ListCarsContract.view view;
+    private ListCarsPresenter presenter;
 
-    public CarlistAdapter(AppDatabase db, List<Car> cars, Context context) {
+    public ListCarsAdapter(List<Car> cars, ListCarsContract.view view) {
         this.carlist = cars;
-        this.context = context;
-        this.db = db;
+        this.view = view;
+        this.presenter = new ListCarsPresenter(view);
     }
 
     @NonNull
@@ -43,39 +45,15 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         final Car carro = carlist.get(position);
 
-        viewHolder.nome.setText(carro.getNome());
-        viewHolder.descricao.setText(carro.getDescricao());
-        viewHolder.preco.setText(NumberFormat.getCurrencyInstance().format(carro.getPreco()));
-        Picasso.get()
-                .load(carro.getImagem())
-                .placeholder(R.drawable.user_placeholder)
-                .error(R.drawable.ic_error_black_24dp)
-                .into(viewHolder.image, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        int id = carro.getId();
-                        if(carlist.get(position).getId() == id){
-                            carlist.remove(position);
-                            db.carDAO().deleteByCarId(id);
-                            notifyDataSetChanged();
-                        }
-                    }
-                });
-
+        viewHolder.bind(carro,position);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CarDetails.class);
-                intent.putExtra("CARRO_ID", carro.getId());
-                context.startActivity(intent);
+                view.startDetailsCarsActivity(carro);
             }
         });
     }
+
 
     @Override
     public int getItemCount() {
@@ -94,6 +72,30 @@ public class CarlistAdapter extends RecyclerView.Adapter<CarlistAdapter.ViewHold
             this.preco = itemView.findViewById(R.id.precoID);
             this.descricao = itemView.findViewById(R.id.descricaoID);
             this.image = itemView.findViewById(R.id.imageCartItemID);
+        }
+
+        private void bind(final Car carro, final int position) {
+            nome.setText(carro.getNome());
+            descricao.setText(carro.getDescricao());
+            preco.setText(NumberFormat.getCurrencyInstance().format(carro.getPreco()));
+            Picasso.get()
+                    .load(carro.getImagem())
+                    .placeholder(R.drawable.user_placeholder)
+                    .error(R.drawable.ic_error_black_24dp)
+                    .into(image, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+                        @Override
+                        public void onError(Exception e) {
+                            if(carlist.get(position) == carro){
+                                carlist.remove(position);
+                                presenter.getDataBase().carDAO().delete(carro);
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
         }
     }
 }

@@ -1,9 +1,8 @@
-package com.example.desafiocarro.fragments;
+package com.example.desafiocarro.Cart;
 
 
-import android.arch.persistence.room.Room;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,57 +13,49 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.desafiocarro.DelegateItemCart;
 import com.example.desafiocarro.R;
-import com.example.desafiocarro.adapters.CartItemsAdapter;
 import com.example.desafiocarro.database.AppDatabase;
-import com.example.desafiocarro.models.Car;
 import com.example.desafiocarro.models.ItemCart;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyCart extends Fragment implements DelegateItemCart {
+public class ListCartFragment extends Fragment implements ListCartContract.view {
 
-    private AppDatabase db;
     private RecyclerView rv_cartItems;
     private TextView totalCount;
     private Button comprarBtn;
-    List<ItemCart> items;
+    private List<ItemCart> items;
     private TextView txtCarrinhoVazio;
+    private ListCartPresenter presenter;
+    private AppDatabase db;
 
-    public MyCart() {
+    public ListCartFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater  inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_my_cart, container, false);
 
-        //inicializa BD
-        db = Room.databaseBuilder(getContext(),
-                AppDatabase.class, "database-car").allowMainThreadQueries().build();
-
         bindViews(view);
+        presenter = new ListCartPresenter(this);
+        items = new ArrayList<>();
+        db = presenter.getDatabase();
+
         setTotal();
-        getItemsCart();
         finalizarCompra();
         setupList(view);
 
         return view;
-    }
-
-    private void getItemsCart() {
-        items = db.itemCartDAO().getItemsCart();
     }
 
     private void bindViews(View view) {
@@ -77,7 +68,7 @@ public class MyCart extends Fragment implements DelegateItemCart {
         comprarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.itemCartDAO().deletaLista(items);
+                presenter.getDatabase().itemCartDAO().deletaLista(items);
                 setTotal();
                 items.clear();
                 rv_cartItems.getAdapter().notifyDataSetChanged();
@@ -98,24 +89,25 @@ public class MyCart extends Fragment implements DelegateItemCart {
         return items.size() == 0;
     }
 
-    private void setupList(View view) {
+
+    @Override
+    public void setupList(View view) {
         //setup recyclerview
         rv_cartItems = view.findViewById(R.id.ItemCartsRv);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rv_cartItems.setLayoutManager(layoutManager);
-        CartItemsAdapter cartItemsAdapter = new CartItemsAdapter(db.itemCartDAO().getItemsCart(), this, db);
-        rv_cartItems.setAdapter(cartItemsAdapter);
+        ListCartAdapter listCartAdapter = new ListCartAdapter(items, this, presenter);
+        rv_cartItems.setAdapter(listCartAdapter);
     }
 
     @Override
     public void setTotal() {
-        getItemsCart();
         float total = 0;
-
+        items = db.itemCartDAO().getItemsCart();
         for (ItemCart item: items)
             total = total + item.getQuantidade() * item.getPreco();
 
-        totalCount.setText(String.format("R$ %.2f", total));
+        totalCount.setText(String.format(Locale.getDefault(),"R$ %.2f", total));
         btnComprarVisibilidade();
     }
 

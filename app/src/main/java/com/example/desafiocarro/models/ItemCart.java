@@ -13,8 +13,10 @@ public class ItemCart {
     @PrimaryKey
     private int idCar;
 
+    @ColumnInfo(name = "quantidade")
     private int quantidade;
 
+    @ColumnInfo(name = "preco")
     private float preco;
 
     public ItemCart(int idCar, int quantidade, float preco) {

@@ -24,7 +24,6 @@ public interface ItemCartDAO {
     @Query("SELECT * FROM ItemCart WHERE idCar = :idCar")
     ItemCart getItemCartById(int idCar);
 
-
     @Query("UPDATE itemCart SET quantidade= :quantidade WHERE idCar = :idCar")
     int updateQuantidade(int quantidade, int idCar);
 
