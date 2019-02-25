@@ -1,8 +1,6 @@
 package com.example.desafiocarro.Cars;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.desafiocarro.CarDetailsActivity;
 import com.example.desafiocarro.R;
-import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
 import com.squareup.picasso.Picasso;
 

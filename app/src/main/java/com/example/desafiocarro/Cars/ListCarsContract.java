@@ -1,6 +1,5 @@
 package com.example.desafiocarro.Cars;
 
-import android.arch.persistence.room.Database;
 import android.content.Context;
 import android.view.View;
 
@@ -15,6 +14,9 @@ public interface ListCarsContract {
         void setupList(View view);
         Context getContext();
         void startDetailsCarsActivity(Car carro);
+        void showSuccess();
+        void showLoading();
+        void showError();
     }
 
     interface presenter{

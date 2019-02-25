@@ -1,24 +1,18 @@
 package com.example.desafiocarro.Cars;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.desafiocarro.CarDetailsActivity;
-import com.example.desafiocarro.CarDetailsFragment;
-import com.example.desafiocarro.MainActivity;
+import com.example.desafiocarro.CarDetails.CarDetailsActivity;
 import com.example.desafiocarro.MainDelegate;
 import com.example.desafiocarro.R;
-import com.example.desafiocarro.database.AppDatabase;
 import com.example.desafiocarro.models.Car;
 
 import java.util.ArrayList;
@@ -71,6 +65,21 @@ public class ListCarsFragment extends Fragment implements ListCarsContract.view 
         Intent intent = new Intent(getContext(), CarDetailsActivity.class);
         intent.putExtra("CARRO_OBJ", carro);
         startActivity(intent);
+    }
+
+    @Override
+    public void showSuccess() {
+
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void showError() {
+
     }
 
 }

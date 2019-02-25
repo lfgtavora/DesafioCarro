@@ -1,47 +1,57 @@
 package com.example.desafiocarro.Cars;
 
-import android.arch.persistence.room.Room;
-import android.util.Log;
-
 import com.example.desafiocarro.RetrofitConfig;
 import com.example.desafiocarro.database.AppDatabase;
+import com.example.desafiocarro.database.DatabaseConfig;
 import com.example.desafiocarro.models.Car;
 import com.example.desafiocarro.services.CarlistService;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ListCarsModel {
 
-    private ListCarsPresenter presenter;
     private CarlistService service;
+    private List<Car> carList2;
     private AppDatabase db;
 
-    public ListCarsModel(ListCarsPresenter presenter) {
-        this.presenter = presenter;
+    ListCarsModel(ListCarsPresenter presenter) {
         this.service = RetrofitConfig.getRetrofitConfig().create(CarlistService.class);
-        this.db = Room.databaseBuilder(presenter.getContext(), AppDatabase.class, "database-car")
-                .allowMainThreadQueries().build();
+        this.db = new DatabaseConfig().geraBd(presenter.getContext());
     }
 
-    public void initListCar() {
-        service.getCars().enqueue(new Callback<List<Car>>() {
-            @Override
-            public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
-                if (response.isSuccessful()) {
-                    if (dbIsEmpty()) { insertAllCars(response.body()); }
-                }
-                else { Log.d("RetrofitError", response.errorBody().toString()); }
-            }
-            @Override
-            public void onFailure(Call<List<Car>> call, Throwable t) {
 
-            }
-        });
+    void initListCar() {
+        service.getCars().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Car>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Car> carList) {
+                        carList2 = carList;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (dbIsEmpty())
+                            insertAllCars(carList2);
+
+                    }
+                });
     }
 
     private boolean dbIsEmpty(){
@@ -57,13 +67,8 @@ public class ListCarsModel {
         db.carDAO().insertAllCars(listCars);
     }
 
-    public List<Car> getListCars(){
+    List<Car> getListCars(){
         return db.carDAO().getAll();
     }
-
-    public void deleteCar(Car carro){
-        db.carDAO().delete(carro);
-    }
-
 
 }

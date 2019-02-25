@@ -3,6 +3,8 @@ package com.example.desafiocarro.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.example.desafiocarro.database.DAOs.CarDAO;
+import com.example.desafiocarro.database.DAOs.ItemCartDAO;
 import com.example.desafiocarro.models.Car;
 import com.example.desafiocarro.models.ItemCart;
 

@@ -1,4 +1,4 @@
-package com.example.desafiocarro.database;
+package com.example.desafiocarro.database.DAOs;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

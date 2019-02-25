@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements MainDelegate {
         setMainTitle("Lista de carros");
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        if(getIntent().getExtras() != null){
+            setupFragment(new ListCartFragment());
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        }
+
     }
 
     public void setupFragment(Fragment fragment){
